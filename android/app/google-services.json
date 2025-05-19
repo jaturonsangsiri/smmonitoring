@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621170702691",
+    "project_id": "sm-monitoring-8862e",
+    "storage_bucket": "sm-monitoring-8862e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621170702691:android:1a96141f13300171727b56",
+        "android_client_info": {
+          "package_name": "com.ldv.smmonitoring"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUn0yLkPmoNpmloMYmykDF1gw5VtvcnTs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
