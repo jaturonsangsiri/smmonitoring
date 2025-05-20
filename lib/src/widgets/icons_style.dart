@@ -45,18 +45,28 @@ class IconText extends StatelessWidget {
   final IconData icon;
   final String text;
   final Color color;
+  final Color backgroundColor;
   final double size;
   final double fontSize;
-  const IconText({super.key, required this.icon, required this.text, required this.color, required this.size, required this.fontSize});
+  final Function() onTap;
+  const IconText({super.key, required this.icon, required this.text, required this.backgroundColor, required this.color, required this.size, required this.fontSize, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, color: color,size: size,),
-        Text(text, style: TextStyle(color: color, fontSize: fontSize),),
-        const SizedBox(width: 10,)
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(15)),
+        child: Row(
+          children: [
+            Icon(icon, color: color,size: size,),
+            const SizedBox(width: 20),
+            Text(text, style: TextStyle(color: color, fontSize: fontSize),),
+            const SizedBox(width: 10)
+          ],
+        ),
+      ),
     );
   }
 }

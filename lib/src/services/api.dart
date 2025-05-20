@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:smmonitoring/src/services/preference.dart';
 import 'package:flutter/foundation.dart';
 import 'package:smmonitoring/src/constants/timer.dart';
@@ -297,6 +299,61 @@ class Api {
       }
     } on Exception catch (error) {
       throw Exception(error);
+    }
+  }
+
+  Future<bool> uploadImage(File? image, String userID) async {
+    if (image == null) return false;
+
+    String mimeType = "";
+    String fileExtension = image.path.split('.').last.toLowerCase();
+
+    switch (fileExtension) {   
+      case 'png':
+        mimeType = "image/png"; 
+        break;
+      case 'jpeg':
+        mimeType = "image/jpeg"; // fallback เป็น jpeg
+        break;
+      case 'jpg':
+        mimeType = "image/jpg"; // fallback เป็น jpg
+        break;
+      case 'gif':
+        mimeType = "image/gif"; // fallback เป็น jpeg
+        break;
+      default:
+        throw Exception(['error image type not allow!.']);
+    }
+
+    FormData formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: image.path.split('/').last,
+        contentType: MediaType.parse(mimeType),
+      ),
+    });
+
+    try {
+      Response response = await _dio.put(
+        "/auth/user/$userID",
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        print("Upload success: ${response.data}");
+        return true;
+      } else {
+        print("Upload failed: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      print("Upload error: $e");
+      return false;
     }
   }
 }

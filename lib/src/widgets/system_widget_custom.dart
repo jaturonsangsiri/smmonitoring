@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
 import 'package:flutter/material.dart';
@@ -132,6 +135,17 @@ class Systemwidgetcustom {
         ),
       ),
     );
+  }
+
+  Future<File?> pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: source, maxHeight: 500, maxWidth: 500, imageQuality: 70);
+
+    if (pickedFile != null) {
+      return File(pickedFile.path);
+    } else {
+      return null;
+    }
   }
 }
 
