@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:smmonitoring/src/bloc/device/devices_bloc.dart';
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
-import 'package:smmonitoring/src/pages/device_detail_page.dart';
-import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
 import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:smmonitoring/src/configs/route.dart' as custom_route;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LegacyLists extends StatefulWidget {
@@ -47,7 +46,7 @@ class _LegacyListsState extends State<LegacyLists> {
                 itemCount: device.legacyDevice.length,
                 itemBuilder: (context, i) {
                   return GestureDetector(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DevicedetailPage())),
+                    onTap: () => Navigator.pushNamed(context, custom_route.Route.deviceLegacy, arguments: {'name': device.legacyDevice[i].name!, 'serial': device.legacyDevice[i].sn!}),
                     child: Card(
                       shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15)),
                       //elevation: 8,

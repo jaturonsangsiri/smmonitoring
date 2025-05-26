@@ -1,3 +1,4 @@
+import 'package:smmonitoring/src/pages/device_detail_legacy_page.dart';
 import 'package:smmonitoring/src/pages/device_detail_page.dart';
 import 'package:smmonitoring/src/pages/home_page.dart';
 import 'package:smmonitoring/src/pages/login_page.dart';
@@ -13,6 +14,7 @@ class Route {
   static const notification = '/notification';
   static const register = '/register';
   static const device = '/device';
+  static const deviceLegacy = '/deviceLegacy';
 
   static Map<String, WidgetBuilder> getAll() => _route;
 
@@ -22,5 +24,6 @@ class Route {
     notification: (context) => NotificationPage(),
     register: (context) => const RegisterPage(),
     device: (context) => DevicedetailPage(),
+    deviceLegacy: (context) => DeviceDetailLegacyPage()
   };
 }

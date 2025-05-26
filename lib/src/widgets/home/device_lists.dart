@@ -4,7 +4,6 @@ import 'package:smmonitoring/src/bloc/device/devices_bloc.dart';
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/configs/url.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
-import 'package:smmonitoring/src/pages/device_detail_page.dart';
 import 'package:smmonitoring/src/widgets/home/subtitle_list.dart';
 import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 import 'package:flutter/material.dart';
