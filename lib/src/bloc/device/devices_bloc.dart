@@ -36,6 +36,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       emit(state.copyWith(isError: true));
       if (kDebugMode) print(e);
     }
+    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> _getDeviceById(event, emit) async {
@@ -56,6 +57,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       emit(state.copyWith(isError: true));
       if (kDebugMode) print(e);
     }
+    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> _clearDevices(event, emit) async {

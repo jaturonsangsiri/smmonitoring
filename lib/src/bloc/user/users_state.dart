@@ -7,6 +7,7 @@ class UsersState extends Equatable {
   final String id;
   final String username;
   final bool error;
+  final bool isLoading;
   final List<HospitalData> hospital;
   final String ward;
   final String hospitalId;
@@ -21,6 +22,7 @@ class UsersState extends Equatable {
     this.id = "",
     this.username = "",
     this.error = false,
+    this.isLoading = true,
     this.hospital = const [],
     this.ward = "",
     this.hospitalId = "",
@@ -36,6 +38,7 @@ class UsersState extends Equatable {
     String? id,
     String? username,
     bool? error,
+    bool? isLoading,
     List<HospitalData>? hospital,
     String? ward,
     String? hospitalId,
@@ -50,6 +53,7 @@ class UsersState extends Equatable {
       id: id ?? this.id,
       username: username ?? this.username,
       error: error ?? this.error,
+      isLoading: isLoading ?? this.isLoading,
       hospital: hospital ?? this.hospital,
       ward: ward ?? this.ward,
       hospitalId: hospitalId ?? this.hospitalId,
@@ -60,5 +64,5 @@ class UsersState extends Equatable {
   }
 
   @override
-  List<Object> get props => [display, pic, role, id, username, error, hospital, ward, hospitalId, type, hospitalSelected, departmentSelected];
+  List<Object> get props => [display, pic, role, id, username, error, hospital, ward, hospitalId, type, hospitalSelected, departmentSelected, isLoading];
 }

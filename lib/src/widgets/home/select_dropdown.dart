@@ -28,6 +28,9 @@ class _SelectDropdownState extends State<SelectDropdown> {
   Widget build(BuildContext context) {
     return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, state) {
+        if(state.isLoading) {
+          return Center(child: Text('กำลังโหลดข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),));
+        }
         if(state.hospital.isEmpty) {
           return Center(child: Text('ไม่มีข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),),);
         }

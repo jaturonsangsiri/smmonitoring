@@ -45,7 +45,7 @@ class _DeviceListsState extends State<DeviceLists> {
           return BlocBuilder<DevicesBloc, DevicesState>(
             builder: (context, state) {
               ward = state.wardId;
-              return state.devices.isEmpty? Center(child: Text('ไม่มีข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),)) : ListView.builder(
+              return state.isLoading? Center(child: Text('กำลังโหลดข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),)) : state.devices.isEmpty? Center(child: Text('ไม่มีข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),)) : ListView.builder(
                 padding: EdgeInsets.only(top: 0,bottom: 0),
                 itemCount: state.devices.length,
                 itemBuilder: (context, i) {

@@ -46,6 +46,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       hospitalId: '',
       type: '',
       error: false,
+      isLoading: false,
       hospital: [],
     ));
   }
@@ -57,5 +58,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   void _onSetHospital(SetHospital event, Emitter<UsersState> emit) async {
     final hospital = await api.getHospital();
     emit(state.copyWith(hospital: hospital));
+    emit(state.copyWith(isLoading: false));
   }
 }

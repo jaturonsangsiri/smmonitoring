@@ -4,6 +4,7 @@ import 'package:smmonitoring/src/bloc/device/devices_bloc.dart';
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
 import 'package:smmonitoring/src/pages/device_detail_page.dart';
+import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
 import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,7 @@ class _LegacyListsState extends State<LegacyLists> {
           return BlocBuilder<DevicesBloc, DevicesState>(
             builder: (context, device) {
               ward = device.wardId;
-              return device.legacyDevice.isEmpty? Center(child: Text('ไม่มีข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),)) : ListView.builder(
+              return device.isLoading? Center(child: Text('กำลังโหลดข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),)) : device.legacyDevice.isEmpty? Center(child: Text('ไม่มีข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),)) : ListView.builder(
                 padding: EdgeInsets.only(top: 0,bottom: 0),
                 itemCount: device.legacyDevice.length,
                 itemBuilder: (context, i) {

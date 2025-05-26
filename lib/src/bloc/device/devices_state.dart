@@ -8,6 +8,7 @@ class DevicesState extends Equatable {
   final String wardId;
   final String wardType;
   final bool isError;
+  final bool isLoading;
   const DevicesState({
     this.devices = const [],
     this.legacyDevice = const [],
@@ -16,6 +17,7 @@ class DevicesState extends Equatable {
     this.wardId = '',
     this.wardType = '',
     this.isError = false,
+    this.isLoading = true,
   });
 
   DevicesState copyWith({
@@ -26,6 +28,7 @@ class DevicesState extends Equatable {
     String? wardId,
     String? wardType,
     bool? isError,
+    bool? isLoading
   }) {
     return DevicesState(
       devices: devices ?? this.devices,
@@ -35,9 +38,10 @@ class DevicesState extends Equatable {
       wardId: wardId ?? this.wardId,
       wardType: wardType ?? this.wardType,
       isError: isError ?? this.isError,
+      isLoading: isLoading ?? this.isLoading
     );
   }
 
   @override
-  List<Object> get props => [devices, legacyDevice, device ?? DeviceId(), isError, hospitalId, wardId, wardType];
+  List<Object> get props => [devices, legacyDevice, device ?? DeviceId(), isError, hospitalId, wardId, wardType, isLoading];
 }

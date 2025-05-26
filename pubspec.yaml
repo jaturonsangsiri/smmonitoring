@@ -54,6 +54,7 @@ dependencies:
   
   flutter_localizations:
     sdk: flutter
+  dropdown_search: ^6.0.2
   
 
 dev_dependencies:
