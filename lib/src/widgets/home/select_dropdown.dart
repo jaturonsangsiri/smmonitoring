@@ -3,6 +3,7 @@ import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/bloc/user/users_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
 import 'package:smmonitoring/src/models/hospitals.dart';
+import 'package:smmonitoring/src/widgets/search_dropdown.dart';
 import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,8 @@ class SelectDropdown extends StatefulWidget {
 
 class _SelectDropdownState extends State<SelectDropdown> {
   List<Ward> wards = [];
+  String? selectedhospitalId;
+  String? selectedWardId;
 
   @override
   void initState() {
@@ -34,10 +37,11 @@ class _SelectDropdownState extends State<SelectDropdown> {
         if(state.hospital.isEmpty) {
           return Center(child: Text('ไม่มีข้อมูล',style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: fourColor),),);
         }
-
         if(wards.isEmpty) {
           wards = state.hospital.first.ward!;
           Ward? ward = wards.firstWhere((u) => u.id == wards.first.id!);
+          selectedhospitalId = state.hospital.first.id;
+          selectedWardId = wards.first.id;
           context.read<DevicesBloc>().add(SetHospitalData(state.hospital.first.id!, state.hospital.first.ward!.first.id!, ward.type!));
           context.read<DevicesBloc>().add(GetDevices(state.hospital.first.ward!.first.id!));
         }
@@ -47,63 +51,75 @@ class _SelectDropdownState extends State<SelectDropdown> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 10,),
-                  DropdownMenuTheme(
-                    data: DropdownMenuThemeData(menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(themeState.themeApp? boxColorDark :  Colors.white),)),
-                    child: DropdownMenu<String>(
-                      initialSelection: state.hospital.first.id, 
-                      trailingIcon: Icon(Icons.arrow_drop_down_outlined, color: themeState.themeApp? Colors.white : Colors.black,),
-                      width: Responsive.width * 0.95,
-                      menuHeight: Responsive.height * 0.6,
-                      textStyle: TextStyle(color: themeState.themeApp? Colors.white : Colors.black),
-                      dropdownMenuEntries: state.hospital.map((hos) {
-                        return DropdownMenuEntry<String>(
-                          value: hos.id!,
-                          label: hos.hosName!,
-                          labelWidget: Text(hos.hosName!, style: TextStyle(color: themeState.themeApp? Colors.white : Colors.black),),
-                        ); 
-                      }).toList(),
-                      onSelected: (value) {
-                        final wardVal = state.hospital.firstWhere((e) => e.id == value).ward!.first.id!;
-                        final wardValType = state.hospital.firstWhere((e) => e.id == value).ward!.first.type!;
-                        context.read<DevicesBloc>().add(SetHospitalData(value!, wardVal, wardValType));
+                  const SizedBox(height: 10),
+                  CustomSearchDropdown<HospitalData>(
+                    items: state.hospital,
+                    selectedItem: selectedhospitalId != null? state.hospital.firstWhere((h) => h.id == selectedhospitalId) : state.hospital.first,
+                    labelText: 'โรงพยาบาล',
+                    width: Responsive.width * 0.95,
+                    menuHeight: Responsive.height * 0.6,
+                    backgroundColor: themeState.themeApp ? boxColorDark : Colors.white,
+                    textColor: themeState.themeApp ? Colors.white : Colors.black,
+                    textStyle: TextStyle(color: themeState.themeApp ? Colors.white : Colors.black),
+                    labelStyle: TextStyle(fontSize: Responsive.isTablet ? 18 : 14, color: themeState.themeApp ? Colors.white : Colors.black),
+                    getDisplayText: (hospital) => hospital.hosName ?? '',
+                    getValue: (hospital) => hospital.id ?? '',
+                    onChanged: (hospital) {
+                      if (hospital != null && hospital.ward != null && hospital.ward!.isNotEmpty) {
+                        final wardVal = hospital.ward!.first.id!;
+                        final wardValType = hospital.ward!.first.type!;
+                        
+                        // อัปเดต state ก่อน
+                        context.read<DevicesBloc>().add(SetHospitalData(hospital.id!, wardVal, wardValType));
+                        
+                        // เรียก API
                         if (wardValType == "NEW") {
                           context.read<DevicesBloc>().add(GetDevices(wardVal));
                         } else {
                           context.read<DevicesBloc>().add(GetLegacyDevices(wardVal));
                         }
-                        setState(() => wards = state.hospital.firstWhere((e) => e.id == value).ward!);
-                      },
-                      label: Text('โรงพยาบาล', style: TextStyle(fontSize: Responsive.isTablet? 20 : 16, fontWeight: FontWeight.w700, color: themeState.themeApp? Colors.white : Colors.black),),
-                    ),
+                        
+                        // อัปเดต local state
+                        setState(() {
+                          wards = hospital.ward!;
+                          selectedhospitalId = hospital.id;
+                          selectedWardId = wardVal; // อัปเดตค่า selectedWardId ด้วย
+                        });
+                      }
+                    },
                   ),
-                  const SizedBox(height: 10,),
-                  DropdownMenuTheme(
-                    data: DropdownMenuThemeData(menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(themeState.themeApp? boxColorDark :  Colors.white),)),
-                    child: DropdownMenu<String>(
-                      initialSelection: wards.first.id,
-                      trailingIcon: Icon(Icons.arrow_drop_down_outlined, color: themeState.themeApp? Colors.white : Colors.black,),
-                      width: Responsive.width * 0.95,
-                      menuHeight: Responsive.height * 0.6,
-                      textStyle: TextStyle(color: themeState.themeApp? Colors.white : Colors.black),
-                      dropdownMenuEntries: wards.map((Ward ward) {
-                        return DropdownMenuEntry<String>(
-                          value: ward.id!,
-                          label: ward.wardName!,
-                          labelWidget: Text(ward.wardName!, style: TextStyle(color: themeState.themeApp? Colors.white : Colors.black),),
-                        ); 
-                      }).toList(),
-                      onSelected: (value) {
-                        Ward? ward = wards.firstWhere((u) => u.id == value);
-                        context.read<DevicesBloc>().add(SetHospitalData(state.hospital.first.id!, value!, ward.type!));
+                  const SizedBox(height: 2),
+                  CustomSearchDropdown<Ward>(
+                    items: wards,
+                    selectedItem: selectedWardId != null? wards.firstWhere((w) => w.id == selectedWardId) : wards.first,
+                    labelText: 'แผนก',
+                    width: Responsive.width * 0.95,
+                    menuHeight: Responsive.height * 0.6,
+                    backgroundColor: themeState.themeApp ? boxColorDark : Colors.white,
+                    textColor: themeState.themeApp ? Colors.white : Colors.black,
+                    textStyle: TextStyle(color: themeState.themeApp ? Colors.white : Colors.black),
+                    labelStyle: TextStyle(fontSize: Responsive.isTablet ? 18 : 14, color: themeState.themeApp ? Colors.white : Colors.black),
+                    getDisplayText: (ward) => ward.wardName ?? '',
+                    getValue: (ward) => ward.id ?? '',
+                    onChanged: (ward) {
+                      if (ward != null) {
+                        // ใช้ hospital ID ที่เลือกจริงแทนที่จะใช้ .first
+                        final selectedHospitalId = state.hospitalSelected;
+                        
+                        context.read<DevicesBloc>().add(SetHospitalData(selectedHospitalId, ward.id!, ward.type!));
+                        
                         if (ward.type == "NEW") {
-                          context.read<DevicesBloc>().add(GetDevices(value));
+                          context.read<DevicesBloc>().add(GetDevices(ward.id!));
                         } else {
-                          context.read<DevicesBloc>().add(GetLegacyDevices(value));
+                          context.read<DevicesBloc>().add(GetLegacyDevices(ward.id!));
                         }
-                      },
-                      label: Text('แผนก', style: TextStyle(fontSize: Responsive.isTablet? 20 : 16, fontWeight: FontWeight.w700, color: themeState.themeApp? Colors.white : Colors.black),),
-                    ),
+                        
+                        // อัปเดต selectedWardId
+                        setState(() {
+                          selectedWardId = ward.id;
+                        });
+                      }
+                    },
                   ),
                 ],
               ),

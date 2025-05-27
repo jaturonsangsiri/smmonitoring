@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
                   // แสดงหัวข้อชื่อผู้ใช้ รูปโปรไฟล์ และเมนูแจ้งเตือนและตั้งค่า
                   Container(
                     width: Responsive.width,
-                    height: Responsive.height * 0.15,
+                    height: 125,
                     decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)), color: themeState.themeApp? Color(0xFF2C2C2E).withValues(alpha: 0.7) : secColor),
                     child: Stack(
                       children: [
@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                   if(user.role == "SERVICE" || user.role == "ADMIN" || user.role == "LEGACY_ADMIN" || user.role == "SUPER")
                     SelectDropdown(), 
               
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
 
                   // แสดงข้อมูลรายการอุปกรณ์ที่มีทั้งหมด
                   BlocBuilder<DevicesBloc, DevicesState>(
