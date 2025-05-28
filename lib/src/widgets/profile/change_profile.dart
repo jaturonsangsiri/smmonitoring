@@ -112,7 +112,7 @@ class _ChangeProfileState extends State<ChangeProfile> {
                                               imagePicker = null;
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text('ยกเลิก', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: const Color.fromRGBO(255, 99, 71, 1)),),
+                                            child: Text('ยกเลิก', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: redColor),),
                                           ),
                                           const SizedBox(width: 20),
                                           OutlinedButton(

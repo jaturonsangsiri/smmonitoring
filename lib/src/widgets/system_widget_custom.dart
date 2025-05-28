@@ -35,40 +35,44 @@ class Systemwidgetcustom {
       barrierDismissible: false, // ไม่ให้ปิด Dialog โดยการคลิกนอก Dialog
       builder: (context) {
         return Center(
-          child: Container(
-            height: 230,
-            width: 300,
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 170, 168, 168), decoration: TextDecoration.none)),
-                const SizedBox(height: 30),
-                Text(content!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black,decoration: TextDecoration.none)),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+          child: BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, themeState) {
+              return Container(
+                height: 230,
+                width: 300,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(color: themeState.themeApp ? boxColorDark : Colors.white, borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    OutlinedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: Colors.white, width: 1))),
-                        side: WidgetStateProperty.all<BorderSide>(BorderSide(color: buttonColor)),
-                      ),
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('ยกเลิก', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: buttonColor)),
-                    ),
-                    const SizedBox(width: 20),
-                    OutlinedButton(
-                      style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(bnColortwo,), shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: bnColortwo, width: 1)))),
-                      onPressed: () => onConfirm(),
-                      child: Text('ตกลง', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white)),
+                    Text(title, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 170, 168, 168), decoration: TextDecoration.none)),
+                    const SizedBox(height: 30),
+                    Text(content!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: themeState.themeApp ? Colors.white70 : Colors.black,decoration: TextDecoration.none)),
+                    Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlinedButton(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all<Color>(themeState.themeApp ? boxColorDark : Colors.white),
+                            shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: themeState.themeApp ? boxColorDark : Colors.white, width: 1))),
+                            side: WidgetStateProperty.all<BorderSide>(BorderSide(color: buttonColor)),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('ยกเลิก', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: buttonColor)),
+                        ),
+                        const SizedBox(width: 20),
+                        OutlinedButton(
+                          style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(bnColortwo,), shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(color: bnColortwo, width: 1)))),
+                          onPressed: () => onConfirm(),
+                          child: Text('ตกลง', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white)),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },

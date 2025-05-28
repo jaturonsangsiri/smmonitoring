@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [ TitleName(), OptionsMenubar(), const SizedBox(width: 5)],
+                            children: [ TitleName(), OptionsMenubar()],
                           ),
                         ),
                       ],

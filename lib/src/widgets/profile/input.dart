@@ -181,8 +181,52 @@ class _ProfileFormState extends State<ProfileForm> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('เปลี่ยนธีมแอป', style: TextStyle(fontSize: Responsive.isTablet ? 20 : 18, fontWeight: FontWeight.bold)),
-                  CustomSwitch(value: state.themeApp, onChanged: (value) => context.read<ThemeBloc>().add(SetTheme()), inactiveColor: Colors.grey.shade400, thumbColor: Colors.white, activeColor: secColor),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('เปลี่ยนธีมแอป', style: TextStyle(fontSize: Responsive.isTablet ? 20 : 18, fontWeight: FontWeight.bold)),
+                          CustomSwitch(value: state.themeApp, onChanged: (value) => context.read<ThemeBloc>().add(SetTheme()), inactiveColor: Colors.grey.shade400, thumbColor: Colors.white, activeColor: secColor),
+                        ],
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          systemwidgetcustom.showDialogConfirm(context, 'ลบบัญชี', 'ท่านต้องการลบบัญชีหรือไม่?', () async {
+                            Navigator.pop(context);
+                            systemwidgetcustom.loadingWidget(context);
+
+                            // ลบบัญชีและกลับไปหน้าเข้าสู่ระบบ
+                            try {
+                              await api.deleteUser(snapshot.id);
+                              await configStorage.clearTokens();
+                              if (context.mounted) {
+                                context.read<DevicesBloc>().add(ClearDevices());
+                                context.read<UsersBloc>().add(RemoveUser());
+                                Navigator.of(context).pop();
+                                Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
+                              }
+                            } on Exception catch (e) {
+                              Navigator.pop(context);
+                              if (kDebugMode) print(e.toString());
+                              if (context.mounted) {
+                                ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถลบบัญชีได้");
+                              }
+                            }
+                          }, primaryColor, redColor);
+                        },
+                        icon: const Icon(Icons.save, color: Colors.white, size: 30),
+                        label: const Text('ลบบัญชีผู้ใช้',style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: state.themeApp ? redColorDark : redColor,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                          elevation: 2,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20,),
                   Text('ชื่อผู้ใช้', style: TextStyle(fontSize: Responsive.isTablet ? 20 : 18, fontWeight: FontWeight.bold)),
                   systemwidgetcustom.normalTextFormField(hintText: 'ชื่อผู้ใช้', controller: nameController, keyboardType: TextInputType.text, focus: nameFocusNode, hintColor: state.themeApp? Colors.white70 : Colors.black),

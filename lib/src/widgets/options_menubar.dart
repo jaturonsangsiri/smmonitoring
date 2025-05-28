@@ -1,5 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter/foundation.dart';
 import 'package:smmonitoring/src/bloc/device/devices_bloc.dart';
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/bloc/user/users_bloc.dart';
@@ -11,7 +9,6 @@ import 'package:smmonitoring/src/services/preference.dart';
 import 'package:smmonitoring/src/widgets/icons_style.dart';
 import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
 import 'package:smmonitoring/src/widgets/utils/responsive.dart';
-import 'package:smmonitoring/src/widgets/utils/snackbar.dart';
 import 'package:smmonitoring/src/widgets/webview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:smmonitoring/src/configs/route.dart' as custom_route;
@@ -41,115 +38,83 @@ class _OptionsMenubarState extends State<OptionsMenubar> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UsersBloc, UsersState>(
-      builder: (context, state) {
-        return BlocBuilder<ThemeBloc, ThemeState>(
-          builder: (context, themeState) {
-            return Row(
-              children: [
-                CircleIcon(
-                  icon: Icon(Icons.notifications, color: Colors.white, size: Responsive.isTablet? 35 : 30),
-                  colorbg: themeState.themeApp? secColor : primaryColor,
-                  padding: Responsive.isTablet? 15 : 10,
-                  function: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage(),)),
-                ),
-                const SizedBox(width: 10,),
-                PopupMenuButton<CustomPopupMenuItem>(
-                  initialValue: _selectedItem,
-                  color: themeState.themeApp? const Color.fromARGB(255, 115, 115, 119) : Colors.white,
-                  child: Icon(Icons.settings, color: Colors.white, size: Responsive.isTablet? 35 : 30),
-                  itemBuilder: (BuildContext context) {
-                    return <PopupMenuEntry<CustomPopupMenuItem>>[
-                      CustomCustomPopupMenuItem(
-                        value: CustomPopupMenuItem(
-                          title: 'บัญชีผู้ใช้',
-                          icon: Icons.person,
-                          // ไปหน้าโปรไฟล์
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
-                          },
-                        ),
-                      ),
-                      CustomCustomPopupMenuItem(
-                        value: CustomPopupMenuItem(
-                          title: 'ลบบัญชีผู้ใช้',
-                          icon: Icons.delete,
-                          onTap: () {
-                            Navigator.pop(context);
-                            systemwidgetcustom.showDialogConfirm(context, 'ลบบัญชี', 'ท่านต้องการลบบัญชีหรือไม่?', () async {
-                              Navigator.pop(context);
-                              systemwidgetcustom.loadingWidget(context);
-
-                              // ลบบัญชีและกลับไปหน้าเข้าสู่ระบบ
-                              try {
-                                await api.deleteUser(state.id);
-                                await configStorage.clearTokens();
-                                if (context.mounted) {
-                                  context.read<DevicesBloc>().add(ClearDevices());
-                                  context.read<UsersBloc>().add(RemoveUser());
-                                  Navigator.of(context).pop();
-                                  Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
-                                }
-                              } on Exception catch (e) {
-                                Navigator.pop(context);
-                                if (kDebugMode) print(e.toString());
-                                if (context.mounted) {
-                                  ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถลบบัญชีได้");
-                                }
-                              }
-                            }, primaryColor, const Color.fromRGBO(255, 99, 71, 1));
-                          },
-                        ),
-                      ),
-                      CustomCustomPopupMenuItem(
-                        value: CustomPopupMenuItem( 
-                          title: 'นโยบายความเป็นส่วนตัว',
-                          icon: Icons.privacy_tip,
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewWidget(url: 'https://siamatic.co.th/privacy-policy', title: 'นโยบายความเป็นส่วนตัว'),));
-                          },
-                        ),
-                      ),
-                      CustomCustomPopupMenuItem(
-                        value: CustomPopupMenuItem(
-                          title: 'ข้อกำหนดและเงื่อนไข',
-                          icon: Icons.info,
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewWidget(url: 'https://siamatic.co.th/terms-conditions', title: 'ข้อกำหนดและเงื่อนไข'),));
-                          },
-                        ),
-                      ),
-                      CustomCustomPopupMenuItem(
-                        value: CustomPopupMenuItem(
-                          title: 'ออกจากระบบ',
-                          icon: Icons.logout,
-                          onTap: () {
-                            Navigator.pop(context);
-                            systemwidgetcustom.showDialogConfirm(context, 'ออกจากระบบ', 'ท่านต้องการออกจากระบบหรือไม่?', () async {
-                              Navigator.pop(context);
-                              systemwidgetcustom.loadingWidget(context);
-
-                              // ออกจากระบบไปหน้าเข้าสู่ระบบ
-                              await configStorage.clearTokens();
-                              if (context.mounted) {
-                                context.read<UsersBloc>().add(RemoveUser());
-                                context.read<DevicesBloc>().add(ClearDevices());
-                                Navigator.of(context).pop();
-                                Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
-                              }
-                            }, primaryColor, const Color.fromRGBO(255, 99, 71, 1));
-                          },
-                        ),
-                      ),
-                    ];
-                  },
-                ),
-              ],
-            );
-          },
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+        return Row(
+          children: [
+            CircleIcon(
+              icon: Icon(Icons.notifications, color: Colors.white, size: Responsive.isTablet? 35 : 30),
+              colorbg: themeState.themeApp? secColor : primaryColor,
+              padding: Responsive.isTablet? 15 : 10,
+              function: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage(),)),
+            ),
+            const SizedBox(width: 10,),
+            PopupMenuButton<CustomPopupMenuItem>(
+              initialValue: _selectedItem,
+              color: themeState.themeApp? const Color.fromARGB(255, 115, 115, 119) : Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(Icons.settings, color: Colors.white, size: Responsive.isTablet? 35 : 30),
+              ),
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<CustomPopupMenuItem>>[
+                  CustomCustomPopupMenuItem(
+                    value: CustomPopupMenuItem(
+                      title: 'บัญชีผู้ใช้',
+                      icon: Icons.person,
+                      // ไปหน้าโปรไฟล์
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()));
+                      },
+                    ),
+                  ),
+                  CustomCustomPopupMenuItem(
+                    value: CustomPopupMenuItem( 
+                      title: 'นโยบายความเป็นส่วนตัว',
+                      icon: Icons.privacy_tip,
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewWidget(url: 'https://siamatic.co.th/privacy-policy', title: 'นโยบายความเป็นส่วนตัว'),));
+                      },
+                    ),
+                  ),
+                  CustomCustomPopupMenuItem(
+                    value: CustomPopupMenuItem(
+                      title: 'ข้อกำหนดและเงื่อนไข',
+                      icon: Icons.info,
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => WebviewWidget(url: 'https://siamatic.co.th/terms-conditions', title: 'ข้อกำหนดและเงื่อนไข'),));
+                      },
+                    ),
+                  ),
+                  CustomCustomPopupMenuItem(
+                    value: CustomPopupMenuItem(
+                      title: 'ออกจากระบบ',
+                      icon: Icons.logout,
+                      onTap: () {
+                        Navigator.pop(context);
+                        systemwidgetcustom.showDialogConfirm(context, 'ออกจากระบบ', 'ท่านต้องการออกจากระบบหรือไม่?', () async {
+                          Navigator.pop(context);
+                          systemwidgetcustom.loadingWidget(context);
+    
+                          // ออกจากระบบไปหน้าเข้าสู่ระบบ
+                          await configStorage.clearTokens();
+                          if (context.mounted) {
+                            context.read<UsersBloc>().add(RemoveUser());
+                            context.read<DevicesBloc>().add(ClearDevices());
+                            Navigator.of(context).pop();
+                            Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
+                          }
+                        }, primaryColor, redColor);
+                      },
+                    ),
+                  ),
+                ];
+              },
+            ),
+          ],
         );
       },
     );

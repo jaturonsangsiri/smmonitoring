@@ -42,6 +42,7 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
   OverlayEntry? _overlayEntry;
   bool _isOpen = false;
   List<T> _filteredItems = [];
+  bool _disposed = false; // เพิ่มตัวแปรเช็คสถานะ dispose
 
   @override
   void initState() {
@@ -52,6 +53,9 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
   @override
   void didUpdateWidget(CustomSearchDropdown<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    
+    // ตรวจสอบว่า widget ยังไม่ถูก dispose
+    if (_disposed) return;
     
     // อัปเดต filtered items เมื่อ items list เปลี่ยน
     if (oldWidget.items != widget.items) {
@@ -69,14 +73,9 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
     }
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _closeDropdown();
-    super.dispose();
-  }
-
   void _toggleDropdown() {
+    if (_disposed) return; // เช็คก่อนดำเนินการ
+    
     if (_isOpen) {
       _closeDropdown();
     } else {
@@ -85,24 +84,35 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
   }
 
   void _openDropdown() {
+    if (_disposed) return; // เช็คก่อนดำเนินการ
+    
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
-    setState(() {
-      _isOpen = true;
-    });
+    
+    if (mounted) { // เช็ค mounted ก่อน setState
+      setState(() {
+        _isOpen = true;
+      });
+    }
   }
 
   void _closeDropdown() {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    setState(() {
-      _isOpen = false;
-    });
+    
+    if (mounted && !_disposed) { // เช็ค mounted และ disposed ก่อน setState
+      setState(() {
+        _isOpen = false;
+      });
+    }
+    
     _searchController.clear();
     _filteredItems = widget.items;
   }
 
   void _filterItems(String query) {
+    if (_disposed || !mounted) return; // เช็คก่อนดำเนินการ
+    
     setState(() {
       _filteredItems = widget.items
           .where((item) => widget.getDisplayText(item)
@@ -113,10 +123,20 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
     _overlayEntry?.markNeedsBuild();
   }
 
+  @override
+  void dispose() {
+    _disposed = true; // ตั้งค่าสถานะ dispose
+    _closeDropdown(); // ปิด dropdown ก่อน
+    _searchController.dispose();
+    super.dispose();
+  }
+
   OverlayEntry _createOverlayEntry() {
     return OverlayEntry(
       builder: (context) => GestureDetector(
-        onTap: _closeDropdown,
+        onTap: () {
+          if (!_disposed) _closeDropdown();
+        },
         child: Container(
           width: double.infinity,
           height: double.infinity,
@@ -187,8 +207,10 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
                             selected: isSelected,
                             selectedTileColor: widget.textColor?.withValues(alpha: 0.1),
                             onTap: () {
-                              widget.onChanged?.call(item);
-                              _closeDropdown();
+                              if (!_disposed) {
+                                widget.onChanged?.call(item);
+                                _closeDropdown();
+                              }
                             },
                             dense: true,
                             hoverColor: widget.textColor?.withValues(alpha: 0.1),

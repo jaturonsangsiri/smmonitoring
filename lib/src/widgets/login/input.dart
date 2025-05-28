@@ -52,6 +52,7 @@ class _InputFormState extends State<LoginForm> {
 
       if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
         ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "โปรดกรอกข้อมูลให้ครบถ้วน");
+        Navigator.pop(context);
         return;
       }
 
