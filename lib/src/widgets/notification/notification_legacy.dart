@@ -33,33 +33,40 @@ class _NotificationLegacyState extends State<NotificationLegacy> {
 
     return BlocBuilder<NotificationBloc, NotificationState>(
       builder: (context, notiState) {
-        if(notiState.isError) {
+        if (notiState.isError) {
           ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถโหลดข้อมูลได้");
           context.read<NotificationBloc>().add(const NotificationError(false));
         }
 
-        if(notiState.legacyNotifications.isEmpty) return Center(child: Text('data', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600,color: Colors.black.withValues(alpha: 0.7)),),);
-        return RefreshIndicator(
-          onRefresh: () async {
-            context.read<NotificationBloc>().add(GetLegacyNotifications());
-            await Future.delayed(const Duration(seconds: 1));
-          },
-          child: ListView.separated(
-            itemCount: notiState.legacyNotifications.length,
-            separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey[300], thickness: 0),
-            itemBuilder: (context, index) {
-              return BlocBuilder<ThemeBloc, ThemeState>(
-                builder: (context, themeState) {
-                  return ListTile(
-                    leading: Icon(Icons.notifications, color: themeState.themeApp? const Color.fromARGB(255, 162, 196, 255) : Colors.green.shade400,),
-                    title: Text(notiState.legacyNotifications[index].message!, style: Responsive.isTablet? Theme.of(context).textTheme.titleSmall : Theme.of(context).textTheme.bodyMedium),
-                    subtitle: LegacySubtitle(notification: notiState.legacyNotifications[index], isTablet: Responsive.isTablet),
-                  );
-                },
-              );
-            }, 
-          ),
-        );
+        if (notiState.isLoading) {
+          return Center(child: Text('กำลังโหลด...', style: Theme.of(context).textTheme.titleMedium));
+        }
+
+        if (notiState.legacyNotifications.isNotEmpty) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<NotificationBloc>().add(GetLegacyNotifications());
+              await Future.delayed(const Duration(seconds: 1));
+            },
+            child: ListView.separated(
+              itemCount: notiState.legacyNotifications.length,
+              separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey[300], thickness: 0),
+              itemBuilder: (context, index) {
+                return BlocBuilder<ThemeBloc, ThemeState>(
+                  builder: (context, themeState) {
+                    return ListTile(
+                      leading: Icon(Icons.notifications, color: themeState.themeApp ? const Color.fromARGB(255, 162, 196, 255) : Colors.green.shade400, size: Responsive.isTablet ? 35 : 25),
+                      title: Text(notiState.legacyNotifications[index].message!, style: Responsive.isTablet ? Theme.of(context).textTheme.titleLarge!.copyWith(color: themeState.themeApp ? Colors.white70 : Colors.black) : Theme.of(context).textTheme.bodyMedium!.copyWith(color: themeState.themeApp ? Colors.white70 : Colors.black)),
+                      subtitle: LegacySubtitle(notification: notiState.legacyNotifications[index], isTablet: Responsive.isTablet),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        }
+
+        return Center(child: Text('ไม่มีข้อมูล', style: Theme.of(context).textTheme.titleMedium));
       },
     );
   }

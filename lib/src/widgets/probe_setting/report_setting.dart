@@ -7,6 +7,7 @@ import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class ReportSetting extends StatefulWidget {
   final Probe probe;
@@ -33,7 +34,7 @@ class _ReportSettingState extends State<ReportSetting> {
               height: 300,
               child: Column(
                 children: [
-                  Padding(padding: const EdgeInsets.all(16), child: Text("เลือกเวลา", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: themeState.themeApp? Colors.white : Colors.black87))),
+                  Padding(padding: const EdgeInsets.all(16), child: Text("เลือกเวลา", style: TextStyle(fontSize: Responsive.isTablet ? 24 : 20, fontWeight: FontWeight.bold, color: themeState.themeApp? Colors.white : Colors.black87))),
                   Expanded(
                     child: CupertinoTheme(
                       data: CupertinoThemeData(brightness: themeState.themeApp ? Brightness.dark : Brightness.light),
@@ -156,8 +157,8 @@ class _ReportSettingState extends State<ReportSetting> {
                   },
                   child: Row(
                     children: [
-                      Text('${state.firstTime.hour.toString().padLeft(2, '0')}.${state.firstTime.minute.toString().padLeft(2, '0')} น.', style: TextStyle(color: themeState.themeApp? Colors.white : secColor, fontWeight: FontWeight.w500)),
-                      Icon(Icons.arrow_drop_down, color: themeState.themeApp? Colors.white : secColor),
+                      Text('${state.firstTime.hour.toString().padLeft(2, '0')}.${state.firstTime.minute.toString().padLeft(2, '0')} น.', style: TextStyle(color: themeState.themeApp? Colors.white : secColor, fontSize: Responsive.isTablet ? 20 : 16, fontWeight: FontWeight.w500)),
+                      Icon(Icons.arrow_drop_down, color: themeState.themeApp? Colors.white : secColor, size: Responsive.isTablet ? 30 : 25),
                     ],
                   ),
                 ),
@@ -176,8 +177,8 @@ class _ReportSettingState extends State<ReportSetting> {
                   },
                   child: Row(
                     children: [
-                      Text('${state.secondTime.hour.toString().padLeft(2, '0')}.${state.secondTime.minute.toString().padLeft(2, '0')} น.', style: TextStyle(color: themeState.themeApp? Colors.white : secColor, fontWeight: FontWeight.w500)),
-                      Icon(Icons.arrow_drop_down, color: themeState.themeApp? Colors.white : secColor),
+                      Text('${state.secondTime.hour.toString().padLeft(2, '0')}.${state.secondTime.minute.toString().padLeft(2, '0')} น.', style: TextStyle(color: themeState.themeApp? Colors.white : secColor, fontSize: Responsive.isTablet ? 20 : 16, fontWeight: FontWeight.w500)),
+                      Icon(Icons.arrow_drop_down, color: themeState.themeApp? Colors.white : secColor, size: Responsive.isTablet ? 30 : 25),
                     ],
                   ),
                 ),
@@ -196,8 +197,8 @@ class _ReportSettingState extends State<ReportSetting> {
                   },
                   child: Row(
                     children: [
-                      Text('${state.thirdTime.hour.toString().padLeft(2, '0')}.${state.thirdTime.minute.toString().padLeft(2, '0')} น.', style: TextStyle(color: themeState.themeApp? Colors.white : secColor, fontWeight: FontWeight.w500)),
-                      Icon(Icons.arrow_drop_down, color: themeState.themeApp? Colors.white : secColor),
+                      Text('${state.thirdTime.hour.toString().padLeft(2, '0')}.${state.thirdTime.minute.toString().padLeft(2, '0')} น.', style: TextStyle(color: themeState.themeApp? Colors.white : secColor, fontSize: Responsive.isTablet ? 20 : 16, fontWeight: FontWeight.w500)),
+                      Icon(Icons.arrow_drop_down, color: themeState.themeApp? Colors.white : secColor, size: Responsive.isTablet ? 30 : 25),
                     ],
                   ),
                 ),
@@ -222,8 +223,8 @@ class _ReportSettingState extends State<ReportSetting> {
         }).toList(),
         onChanged: function,
         dropdownColor: themeState.themeApp? boxColorDark : Colors.white,
-        icon: Icon(Icons.arrow_drop_down_outlined,color: themeState.themeApp? Colors.white : secColor),
-        style: const TextStyle(fontSize: 16),
+        icon: Icon(Icons.arrow_drop_down_outlined,color: themeState.themeApp? Colors.white : secColor, size: Responsive.isTablet ? 30 : 25),
+        style: TextStyle(fontSize: Responsive.isTablet ? 20 : 16),
       ),
     );
   }

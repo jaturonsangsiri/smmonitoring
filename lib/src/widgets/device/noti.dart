@@ -19,7 +19,11 @@ class Noti extends StatelessWidget {
         DeviceInfo devices =
             state.devices.where((i) => i.serial == devSerial).toList().first;
         if (devices.notification!.isEmpty) {
-          return const Center(child: Text("ไม่มีข้อมูลการแจ้งเตือน"));
+          return BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, themeState) {
+              return Center(child: Text("ไม่มีข้อมูลการแจ้งเตือน", style: Responsive.isTablet ? Theme.of(context).textTheme.titleLarge!.copyWith(color: themeState.themeApp ? Colors.white70 : Colors.black) : Theme.of(context).textTheme.bodyMedium));
+            },
+          );
         }
         return BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, theme) {
@@ -36,7 +40,7 @@ class Noti extends StatelessWidget {
                         device.createAt.toString().substring(11, 16),
                         ConvertMessage.showIcon(
                           device.message ?? "-/-",
-                          Responsive.isTablet ? 35 : 30,
+                          Responsive.isTablet ? 40 : 30,
                           theme.themeApp,
                         ),
                       ),

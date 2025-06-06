@@ -6,6 +6,7 @@ import 'package:smmonitoring/src/models/devices.dart';
 import 'package:smmonitoring/src/services/services.dart';
 import 'package:smmonitoring/src/widgets/probe_setting/setting_sub_widget.dart';
 import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 import 'package:smmonitoring/src/widgets/utils/snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('🔔 ตั้งค่าการแจ้งเตือน',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: themeState.themeApp? secColorDarkSub : secColor)),
+                  Text('🔔 ตั้งค่าการแจ้งเตือน',style: TextStyle(fontSize: Responsive.isTablet ? 24 : 20,fontWeight: FontWeight.bold,color: themeState.themeApp? secColorDarkSub : secColor)),
                   ElevatedButton.icon(
                     onPressed: () async {
                       // print('🔘 เปิดแจ้งเตือน: ${state.isNotification}');
@@ -86,7 +87,7 @@ class _NotificationSettingState extends State<NotificationSetting> {
                       }
                     },
                     icon: const Icon(Icons.save, color: Colors.white, size: 30),
-                    label: const Text('บันทึก',style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold)),
+                    label: Text('บันทึก',style: TextStyle(color: Colors.white,fontSize: Responsive.isTablet ? 20 : 16,fontWeight: FontWeight.bold)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: threeColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -150,8 +151,8 @@ class _NotificationSettingState extends State<NotificationSetting> {
         }).toList(),
         onChanged: function,
         dropdownColor: themeState.themeApp? boxColorDark : Colors.white,
-        icon: Icon(Icons.arrow_drop_down_outlined,color: themeState.themeApp? Colors.white : secColor),
-        style: const TextStyle(fontSize: 16),
+        icon: Icon(Icons.arrow_drop_down_outlined,color: themeState.themeApp? Colors.white : secColor, size: Responsive.isTablet ? 30 : 25),
+        style: TextStyle(fontSize: Responsive.isTablet ? 20 : 16),
       ),
     );
   }

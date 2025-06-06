@@ -37,6 +37,7 @@ class App extends StatelessWidget {
             canvasColor: Colors.white,
             textTheme: TextTheme(
               headlineLarge: TextStyle(color: Colors.white),
+              titleLarge: TextStyle(color: Colors.white),
               titleMedium: TextStyle(color: Colors.white),
               titleSmall: TextStyle(color: Colors.black),
               labelLarge: TextStyle(color: Colors.black),
@@ -53,6 +54,7 @@ class App extends StatelessWidget {
             scaffoldBackgroundColor: fourColorDark,
             textTheme: TextTheme(
               headlineLarge: TextStyle(color: Colors.white),
+              titleLarge: TextStyle(color: Colors.white),
               titleMedium: TextStyle(color: Colors.white),
               titleSmall: TextStyle(color: Colors.white70),
               bodyLarge: TextStyle(color: Colors.white70),

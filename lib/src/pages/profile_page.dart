@@ -1,5 +1,6 @@
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
+import 'package:smmonitoring/src/widgets/appbar.dart';
 import 'package:smmonitoring/src/widgets/profile/change_profile.dart';
 import 'package:smmonitoring/src/widgets/profile/input.dart';
 import 'package:smmonitoring/src/widgets/utils/responsive.dart';
@@ -17,23 +18,10 @@ class ProfilePage extends StatelessWidget {
       [65.0, 29.0, 55.0, 54.0],
       [70.0, 327.0, 43.0, 53.0],
     ];
+    BarCustom appBarCustom = BarCustom();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'แก้ไขโปรไฟล์',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
+      appBar: appBarCustom.appBarCustomNoTabs(context, 'แก้ไขโปรไฟล์', null),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -42,7 +30,7 @@ class ProfilePage extends StatelessWidget {
                 return Container(
                   color: themeState.themeApp? Color(0xFF2C2C2E).withValues(alpha: 0.7) : secColor,
                   width: Responsive.width,
-                  height: 200,
+                  height: Responsive.isTablet ? 300 : 200,
                   child: Stack(
                     clipBehavior:
                         Clip.none, // สำคัญ! ปรับเพื่อให้รูปโปรไฟล์ล้นออกมาได้

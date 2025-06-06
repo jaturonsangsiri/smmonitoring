@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class CustomSearchDropdown<T> extends StatefulWidget {
   final List<T> items;
@@ -132,98 +133,99 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
   }
 
   OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    Offset offset = renderBox.localToGlobal(Offset.zero);
+    double screenWidth = Responsive.width;
+
+    double dropdownWidth = widget.width ?? renderBox.size.width;
+    double leftPosition = offset.dx;
+
+    // ปรับตำแหน่ง dropdown หากเกินขอบจอ
+    if (leftPosition + dropdownWidth > screenWidth) {
+      leftPosition = screenWidth - dropdownWidth -16;
+      if (leftPosition < 0) leftPosition = 0; // ล้นขอบไปด้านซ้าย
+    }
+
     return OverlayEntry(
-      builder: (context) => GestureDetector(
-        onTap: () {
-          if (!_disposed) _closeDropdown();
-        },
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.transparent,
-          child: CompositedTransformFollower(
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, 55),
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: widget.width ?? (MediaQuery.of(context).size.width - 32),
-                constraints: BoxConstraints(
-                  maxHeight: widget.menuHeight ?? 200,
-                ),
-                decoration: BoxDecoration(
-                  color: widget.backgroundColor ?? Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: _searchController,
-                        style: TextStyle(color: widget.textColor ?? Colors.black),
-                        decoration: InputDecoration(
-                          hintText: 'ค้นหา...',
-                          hintStyle: TextStyle(color: widget.textColor?.withValues(alpha: 0.6) ?? Colors.grey),
-                          prefixIcon: Icon(Icons.search, color: widget.textColor ?? Colors.grey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: widget.textColor?.withValues(alpha: 0.3) ?? Colors.grey),
+      builder: (context) => Stack(
+        children: [
+          // Layer ด้านหลัง dropdown เอาไว้ปิด dropdown List
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                if (!_disposed) _closeDropdown();
+              },
+              child: Container(color: Colors.black.withValues(alpha: 0.3)),
+            ),
+          ),
+
+          Positioned(
+            left: leftPosition,
+            top: offset.dy + renderBox.size.height,
+            width: dropdownWidth,
+            child: CompositedTransformFollower(
+              link: _layerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, 0),
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: widget.width ?? (MediaQuery.of(context).size.width - 32),
+                  constraints: BoxConstraints(maxHeight: widget.menuHeight ?? 200),
+                  decoration: BoxDecoration(color: widget.backgroundColor ?? Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade300)),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: _searchController,
+                          style: TextStyle(color: widget.textColor ?? Colors.black),
+                          decoration: InputDecoration(
+                            hintText: 'ค้นหา...',
+                            hintStyle: TextStyle(color: widget.textColor?.withValues(alpha: 0.6) ?? Colors.grey, fontSize: 16),
+                            prefixIcon: Icon(Icons.search, color: widget.textColor ?? Colors.grey),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: widget.textColor?.withValues(alpha: 0.3) ?? Colors.grey)),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: widget.textColor?.withValues(alpha: 0.3) ?? Colors.grey)),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: widget.textColor ?? Colors.blue)),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: widget.textColor?.withValues(alpha: 0.3) ?? Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: widget.textColor ?? Colors.blue),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          onChanged: _filterItems,
                         ),
-                        onChanged: _filterItems,
                       ),
-                    ),
-                    Flexible(
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: _filteredItems.length,
-                        itemBuilder: (context, index) {
-                          final item = _filteredItems[index];
-                          final isSelected = widget.selectedItem != null && widget.getValue(item) == widget.getValue(widget.selectedItem!);
-                          
-                          return ListTile(
-                            title: Text(
-                              widget.getDisplayText(item),
-                              style: TextStyle(
-                                color: widget.textColor ?? Colors.black,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              ),
-                            ),
-                            selected: isSelected,
-                            selectedTileColor: widget.textColor?.withValues(alpha: 0.1),
-                            onTap: () {
-                              if (!_disposed) {
-                                widget.onChanged?.call(item);
-                                _closeDropdown();
-                              }
-                            },
-                            dense: true,
-                            hoverColor: widget.textColor?.withValues(alpha: 0.1),
-                          );
-                        },
+                      Flexible(
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          itemCount: _filteredItems.length,
+                          itemBuilder: (context, index) {
+                            final item = _filteredItems[index];
+                            final isSelected = widget.selectedItem != null && widget.getValue(item) == widget.getValue(widget.selectedItem!);
+                            
+                            return ListTile(
+                              title: Text(widget.getDisplayText(item), style: TextStyle(color: widget.textColor ?? Colors.black, fontSize: Responsive.isTablet ? 18 : 14, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+                              selected: isSelected,
+                              selectedTileColor: widget.textColor?.withValues(alpha: 0.1),
+                              onTap: () {
+                                if (!_disposed) {
+                                  widget.onChanged?.call(item);
+                                  _closeDropdown();
+                                }
+                              },
+                              dense: true,
+                              hoverColor: widget.textColor?.withValues(alpha: 0.1),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -233,8 +235,10 @@ class _SearchableDropdownState<T> extends State<CustomSearchDropdown<T>> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 10),
         if (widget.labelText != null)
           Text(widget.labelText!, style: widget.labelStyle),
+        const SizedBox(height: 4),
         CompositedTransformTarget(
           link: _layerLink,
           child: GestureDetector(

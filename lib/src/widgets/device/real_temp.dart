@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class RealTemp extends StatefulWidget {
   final String devSerial;
@@ -86,10 +87,10 @@ class _RealTempState extends State<RealTemp> {
   Widget _buildSensorReading({required IconData icon, required String label, required String value, required Color color}) {
     return Column(
       children: [
-        Icon(icon, color: color, size: 50),
+        Icon(icon, color: color, size: Responsive.isTablet ? 70 : 50),
         SizedBox(height: 4),
-        BlocBuilder<ThemeBloc, ThemeState>(builder: (context, themeState) => Text(label, style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600,color: themeState.themeApp? Colors.white : Colors.black))),
-        Text(value, style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: color)),
+        BlocBuilder<ThemeBloc, ThemeState>(builder: (context, themeState) => Text(label, style: TextStyle(fontSize: Responsive.isTablet ? 20 : 16,fontWeight: FontWeight.w600,color: themeState.themeApp? Colors.white : Colors.black))),
+        Text(value, style: TextStyle(fontSize: Responsive.isTablet ? 60 : 40,fontWeight: FontWeight.bold,color: color)),
       ],
     );
   }

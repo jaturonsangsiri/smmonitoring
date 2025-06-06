@@ -3,6 +3,7 @@ import 'package:smmonitoring/src/models/devices.dart';
 import 'package:smmonitoring/src/widgets/device/real_temp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class TempInfo extends StatelessWidget {
   final Probe deviceData;
@@ -42,9 +43,9 @@ class TempInfo extends StatelessWidget {
       builder: (context, themeState) {
         return Column(
           children: [
-            Text(title, style: TextStyle(fontWeight: FontWeight.w600,fontSize: 15,color: themeState.themeApp? Colors.white : Colors.black)),
+            Text(title, style: TextStyle(fontWeight: FontWeight.w600,fontSize: Responsive.isTablet ? 20 : 15,color: themeState.themeApp? Colors.white : Colors.black)),
             SizedBox(height: 4),
-            Text(value, style: TextStyle(fontSize: 18, color: themeState.themeApp? Colors.white70 : Colors.grey[700])),
+            Text(value, style: TextStyle(fontSize: Responsive.isTablet ? 23 : 18, color: themeState.themeApp? Colors.white70 : Colors.grey[700])),
           ],
         );
       },

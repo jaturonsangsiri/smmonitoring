@@ -1,7 +1,11 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
 import 'package:smmonitoring/src/services/preference.dart';
+import 'package:smmonitoring/src/widgets/appbar.dart';
 import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   final int newWard;
@@ -15,7 +19,7 @@ class NotificationSettingsPage extends StatefulWidget {
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   // ลิสต์การตั้งค่าการแจ้งเตือน
   List<Map> settings = [];
-  Systemwidgetcustom systemwidgetcustom = Systemwidgetcustom();
+  BarCustom barCustom = BarCustom();
   final configStorage = ConfigStorage();
   bool notification = false, door = false, legacy = false;
   String role = "";
@@ -73,11 +77,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('การตั้งค่าแจ้งเตือน',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white,),),
-        centerTitle: true,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white,),onPressed: () => Navigator.pop(context),),
-      ),
+      appBar: barCustom.appBarCustomNoTabs(context, 'ตั้งค่าการแจ้งเตือน', null),
       body: settings.isEmpty? Center(child: Text('ไม่มีข้อมูล'),) : ListView.separated(
         itemCount: settings.length,
         itemBuilder: (context, index) => buildNotificationSetting(settings[index]),
@@ -89,7 +89,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   // widget สำหรับการสร้างการตั้งค่าการแจ้งเตือน
   Widget buildNotificationSetting(Map setting) {
     return ListTile(
-      title: Text(setting['title'], style: Theme.of(context).textTheme.bodyLarge),
+      title: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return Text(setting['title'], style: Responsive.isTablet ? Theme.of(context).textTheme.titleLarge!.copyWith(color: themeState.themeApp ? Colors.white70 : Colors.black) : Theme.of(context).textTheme.bodyLarge);
+        },
+      ),
       trailing: CustomSwitch(
         value: setting['value'],
         onChanged: (val) async {

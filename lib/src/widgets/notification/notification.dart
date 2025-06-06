@@ -35,28 +35,34 @@ class _NotificationListState extends State<NotificationList> {
           context.read<NotificationBloc>().add(const NotificationError(false));
         }
 
-        if(notiState.notifications.isEmpty) return Center(child: Text('data', style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600,color: Colors.black.withValues(alpha: 0.7)),),);
+        if (notiState.isLoading) {
+          return Center(child: Text('กำลังโหลด...', style: Theme.of(context).textTheme.titleMedium));
+        }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            context.read<NotificationBloc>().add(GetAllNotifications());
-            await Future.delayed(const Duration(seconds: 1));
-          },
-          child: ListView.separated(
-            itemCount: notiState.notifications.length,
-            separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey[300], thickness: 0),
-            itemBuilder: (BuildContext context, int index) {
-              return notificationWidget.buildNotificationWidget(
-                context,
-                notiState.notifications[index].device!.name!,
-                notiState.notifications[index].detail!,
-                notiState.notifications[index].createAt.toString().substring(11, 16),
-                notiState.notifications[index].createAt.toString().substring(0, 10),
-                null
-              );
+        if(notiState.notifications.isNotEmpty) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<NotificationBloc>().add(GetAllNotifications());
+              await Future.delayed(const Duration(seconds: 1));
             },
-          ),
-        );
+            child: ListView.separated(
+              itemCount: notiState.notifications.length,
+              separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey[300], thickness: 0),
+              itemBuilder: (BuildContext context, int index) {
+                return notificationWidget.buildNotificationWidget(
+                  context,
+                  notiState.notifications[index].device!.name!,
+                  notiState.notifications[index].detail!,
+                  notiState.notifications[index].createAt.toString().substring(11, 16),
+                  notiState.notifications[index].createAt.toString().substring(0, 10),
+                  null
+                );
+              },
+            ),
+          );
+        }
+
+        return Center(child: Text('ไม่มีข้อมูล', style: Theme.of(context).textTheme.titleMedium));
       },
     );
   }

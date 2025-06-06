@@ -48,7 +48,7 @@ class _OptionsMenubarState extends State<OptionsMenubar> {
               padding: Responsive.isTablet? 15 : 10,
               function: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationPage(),)),
             ),
-            const SizedBox(width: 10,),
+            SizedBox(width: Responsive.isTablet ? 20 : 10),
             PopupMenuButton<CustomPopupMenuItem>(
               initialValue: _selectedItem,
               color: themeState.themeApp? const Color.fromARGB(255, 115, 115, 119) : Colors.white,
@@ -56,6 +56,7 @@ class _OptionsMenubarState extends State<OptionsMenubar> {
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Icon(Icons.settings, color: Colors.white, size: Responsive.isTablet? 35 : 30),
               ),
+              constraints: BoxConstraints.tightFor(width: Responsive.isTablet ? 400 : 200, height: Responsive.isTablet ? 220 : 100),
               itemBuilder: (BuildContext context) {
                 return <PopupMenuEntry<CustomPopupMenuItem>>[
                   CustomCustomPopupMenuItem(
@@ -114,6 +115,7 @@ class _OptionsMenubarState extends State<OptionsMenubar> {
                 ];
               },
             ),
+            SizedBox(width: 10),
           ],
         );
       },
@@ -155,7 +157,7 @@ class _CustomCustomPopupMenuItemState extends State<CustomCustomPopupMenuItem> {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, themeState) {
-        return TextButton.icon(onPressed: widget.value.onTap, style: TextButton.styleFrom(alignment: Alignment.centerLeft,padding: const EdgeInsets.symmetric(horizontal: 16.0)), icon: Icon(widget.value.icon, size: 20, color: themeState.themeApp? Colors.white70 : primaryColor), label: Text(widget.value.title, style: TextStyle(color: themeState.themeApp? Colors.white70 : primaryColor, fontSize: 16),),);
+        return TextButton.icon(onPressed: widget.value.onTap, style: TextButton.styleFrom(alignment: Alignment.centerLeft,padding: EdgeInsets.symmetric(horizontal: Responsive.isTablet ? 20.0 : 16.0, vertical: 10)), icon: Icon(widget.value.icon, size: Responsive.isTablet ? 30 : 20, color: themeState.themeApp? Colors.white70 : primaryColor), label: Text(widget.value.title, style: TextStyle(color: themeState.themeApp? Colors.white70 : primaryColor, fontSize: Responsive.isTablet ? 20 : 16)));
       },
     );
   }

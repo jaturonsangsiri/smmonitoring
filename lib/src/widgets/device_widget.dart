@@ -6,6 +6,7 @@ import 'package:smmonitoring/src/widgets/device/noti.dart';
 import 'package:smmonitoring/src/widgets/device/temp_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class DeviceStatus extends StatelessWidget {
   final Color bgColor;
@@ -44,7 +45,7 @@ class DeviceDetailWidget extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 260,
+            height: Responsive.isTablet ? 340 : 260,
             child: BlocBuilder<ThemeBloc, ThemeState>(
               builder: (context, themeState) {
                 return Card(

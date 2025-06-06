@@ -47,11 +47,13 @@ class _TitleNameState extends State<TitleName> {
 
           return Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(2),
-                margin: const EdgeInsets.only(right: 8, left: 8), // Border width
-                decoration: BoxDecoration(color: Colors.white60, borderRadius: BorderRadius.circular(10)),
-                child: systemwidgetcustom.circleImageButton(snapshot.pic, 18, 50, () {},10),
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  margin: const EdgeInsets.only(left: 10, right: 10), // Border width
+                  decoration: BoxDecoration(color: Colors.white60, borderRadius: BorderRadius.circular(10)),
+                  child: systemwidgetcustom.circleImageButton(snapshot.pic, Responsive.isTablet ? 30 : 18, 50, () {},10),
+                ),
               ),
               SizedBox(
                 width: Responsive.width * 0.5,

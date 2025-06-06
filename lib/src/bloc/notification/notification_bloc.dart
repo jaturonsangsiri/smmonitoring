@@ -17,21 +17,23 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   void _onLoadNotifications(GetAllNotifications event, Emitter<NotificationState> emit) async {
+     emit(state.copyWith(isLoading: true));
     try {
       List<NotiList> notifications = await api.getNotification();
-      emit(state.copyWith(notifications: notifications));
+      emit(state.copyWith(notifications: notifications, isLoading: false));
     } catch (e) {
-      emit(state.copyWith(isError: true));
+      emit(state.copyWith(isError: true, isLoading: false));
       if (kDebugMode) print(e);
     }
   }
 
   void _onLoadLegacyNotification(GetLegacyNotifications event, Emitter<NotificationState> emit) async {
+    emit(state.copyWith(isLoading: true));
     try {
       List<LegacyNotificationList> legacyNotification = await api.getLegacyNotification();
-      emit(state.copyWith(legacyNotifications: legacyNotification));
+      emit(state.copyWith(legacyNotifications: legacyNotification, isLoading: false));
     } catch (e) {
-      emit(state.copyWith(isError: true));
+      emit(state.copyWith(isError: true, isLoading: false));
       if(kDebugMode) print(e);
     }
   }

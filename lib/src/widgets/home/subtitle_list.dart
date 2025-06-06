@@ -51,8 +51,8 @@ class SubtitleList extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    DecoratedBox(decoration: BoxDecoration(color: deviceInfo!.online! ? Colors.green : Colors.red, borderRadius: BorderRadius.circular(12)), child: const SizedBox(width: 45, height: 18)),
-                    Text(deviceInfo!.online! ? "online" : "offline", style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                    DecoratedBox(decoration: BoxDecoration(color: deviceInfo!.online! ? Colors.green : Colors.red, borderRadius: BorderRadius.circular(12)), child: SizedBox(width: Responsive.isTablet ? 60 : 45, height: Responsive.isTablet ? 33 : 18)),
+                    Text(deviceInfo!.online! ? "online" : "offline", style: TextStyle(color: Colors.white, fontSize: Responsive.isTablet ? 14 : 11, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],

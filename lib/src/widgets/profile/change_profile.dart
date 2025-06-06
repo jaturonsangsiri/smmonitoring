@@ -10,6 +10,7 @@ import 'package:smmonitoring/src/widgets/icons_style.dart';
 import 'package:smmonitoring/src/widgets/system_widget_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 import 'package:smmonitoring/src/widgets/utils/snackbar.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
@@ -36,6 +37,7 @@ class _ChangeProfileState extends State<ChangeProfile> {
   Widget build(BuildContext context) {
     return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, snapshot) {
+        double imageSize = Responsive.isTablet ? 200 : 120;
         return Align(
           alignment: Alignment.topCenter,
           child: Padding(
@@ -43,7 +45,19 @@ class _ChangeProfileState extends State<ChangeProfile> {
             child: Stack(
               children: [
                 // รูปโปรไฟล์
-                systemwidgetcustom.circleImageButton(snapshot.pic,60,100,() {},60),
+                SizedBox(
+                  height: Responsive.isTablet ? 350 : 120,
+                  width: Responsive.isTablet ? 250 : 120,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(Responsive.isTablet ? 150 : 60),
+                    child: CachedNetworkImage(
+                      imageUrl: snapshot.pic,
+                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white70),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
                 // ไอคอนกล้อง
                 Positioned(
                   bottom: 0,
@@ -59,37 +73,34 @@ class _ChangeProfileState extends State<ChangeProfile> {
                         builder: (context) => BlocBuilder<ThemeBloc, ThemeState>(builder: (context, themeState) {
                           return Center(
                             child: Container(
-                              height: 330,
-                              width: 300,
+                              height: Responsive.isTablet ? 430 : 330,
+                              width: Responsive.isTablet ? 400 : 300,
                               padding: EdgeInsets.all(20),
                               decoration: BoxDecoration(color: themeState.themeApp? fourColorDark : Colors.white, borderRadius: BorderRadius.circular(15)),
                               child: StatefulBuilder(
                                 builder: (context, setState) {
                                   return Column(
                                     children: [
-                                      imagePicker != null?
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(60),
-                                        child: SizedBox.fromSize(
-                                          size: Size.fromRadius(60),
+                                      imagePicker != null? SizedBox(
+                                        height: imageSize,
+                                        width: imageSize,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(imageSize / 2),
                                           child: Image.file(
                                             imagePicker!,
-                                            fit: BoxFit.fill,
-                                            height: 50,
-                                            scale: 0.7,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                      ) : ClipRRect(
-                                        borderRadius: BorderRadius.circular(60),
-                                        child: SizedBox.fromSize(
-                                          size: Size.fromRadius(60),
+                                      ) : SizedBox(
+                                        height: imageSize,
+                                        width: imageSize,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(imageSize / 2),
                                           child: CachedNetworkImage(
                                             imageUrl: snapshot.pic,
                                             placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white70),
                                             errorWidget: (context, url, error) => const Icon(Icons.error),
-                                            fit: BoxFit.fill,
-                                            height: 50,
-                                            scale: 0.7,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),

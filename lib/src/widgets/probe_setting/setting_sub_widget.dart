@@ -2,6 +2,7 @@ import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
 import 'package:smmonitoring/src/constants/contants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smmonitoring/src/widgets/utils/responsive.dart';
 
 class SettingSubWidget {
   // สร้าง Widget หัวข้อใหญ่
@@ -42,9 +43,9 @@ class SettingSubWidget {
       builder: (context, themeState) {
         return Row(
           children: [
-            Icon(icon, color: themeState.themeApp ? secColorDarkSub : secColor),
+            Icon(icon, color: themeState.themeApp ? secColorDarkSub : secColor, size:  Responsive.isTablet ? 26 : 24),
             const SizedBox(width: 16),
-            Expanded(child: Text(title, style: TextStyle(color: themeState.themeApp? Colors.white : Color.fromARGB(255, 70, 70, 70), fontSize: 16, fontWeight: FontWeight.w500))),
+            Expanded(child: Text(title, style: TextStyle(color: themeState.themeApp? Colors.white : Color.fromARGB(255, 70, 70, 70), fontSize:  Responsive.isTablet ? 20 : 16, fontWeight: FontWeight.w500))),
             trailing,
           ],
         );

@@ -17,6 +17,7 @@ import 'package:smmonitoring/src/services/preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter/services.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -60,6 +61,12 @@ void main() async {
   final userBloc = BlocProvider<UsersBloc>(create: (context) => UsersBloc());
   final notificationBloc = BlocProvider(create: (context) => NotificationBloc());
   final themeBloc = BlocProvider(create: (context) => ThemeBloc());
+
+  // ปรับให้แอปเป็นแนวตั้งเท่านั้น
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
 
   FlutterNativeSplash.remove();
   runApp(

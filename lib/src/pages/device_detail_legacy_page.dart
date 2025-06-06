@@ -1,11 +1,11 @@
 import 'package:smmonitoring/src/bloc/theme/theme_bloc.dart';
-import 'package:smmonitoring/src/constants/contants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:smmonitoring/src/models/legacy_notification.dart';
 import 'package:smmonitoring/src/services/api.dart';
+import 'package:smmonitoring/src/widgets/appbar.dart';
 import 'package:smmonitoring/src/widgets/utils/snackbar.dart';
 
 class DeviceDetailLegacyPage extends StatefulWidget {
@@ -21,6 +21,7 @@ class _DeviceDetailLegacyPageState extends State<DeviceDetailLegacyPage> {
   List<LegacyNotificationList> legacyList = [];
   bool isLoading = true;
   Map arguments = {};
+  BarCustom barCustom = BarCustom();
 
   Future<void> getNotification() async {
     try {
@@ -66,7 +67,7 @@ class _DeviceDetailLegacyPageState extends State<DeviceDetailLegacyPage> {
       return BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {
           return Scaffold(
-            appBar: buildAppBar(context, arguments['name'] ?? '', themeState.themeApp),
+            appBar: barCustom.appBarCustomNoTabs(context, arguments['name'] ?? '', null),
             body: Center(
               child: Container(
                 width: 120,
@@ -84,7 +85,7 @@ class _DeviceDetailLegacyPageState extends State<DeviceDetailLegacyPage> {
       return BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, themeState) {
           return Scaffold(
-            appBar: buildAppBar(context, arguments['name'] ?? '', themeState.themeApp),
+            appBar: barCustom.appBarCustomNoTabs(context, arguments['name'] ?? '', null),
             body: Column(
               children: [
                 Expanded(
@@ -106,23 +107,10 @@ class _DeviceDetailLegacyPageState extends State<DeviceDetailLegacyPage> {
         },
       );
     }
-    return BlocBuilder<ThemeBloc, ThemeState>(
-      builder: (context, themeState) {
-        return Scaffold(
-            appBar: buildAppBar(context, arguments['name'] ?? '', themeState.themeApp),
-            body: Center(child: Text('ไม่มีการแจ้งเตือน', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: themeState.themeApp? Colors.white : Colors.black, fontWeight: FontWeight.w500)) 
-          ),
-        );
-      },
-    );
-  }
-
-  AppBar buildAppBar(BuildContext context, String title, bool isDarkMode) {
-    return AppBar(
-      centerTitle: true,
-      leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back, color: Colors.white,),),
-      backgroundColor: isDarkMode? Color(0xFF2C2C2E).withValues(alpha: 0.7) : secColor,
-      title: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white))
+    return Scaffold(
+        appBar: barCustom.appBarCustomNoTabs(context, arguments['name'] ?? '', null),
+        body: Center(child: Text('ไม่มีการแจ้งเตือน', style: Theme.of(context).textTheme.titleMedium) 
+      ),
     );
   }
 }
