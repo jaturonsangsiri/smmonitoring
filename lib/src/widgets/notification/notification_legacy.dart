@@ -55,7 +55,7 @@ class _NotificationLegacyState extends State<NotificationLegacy> {
                 return BlocBuilder<ThemeBloc, ThemeState>(
                   builder: (context, themeState) {
                     return ListTile(
-                      leading: Icon(Icons.notifications, color: themeState.themeApp ? const Color.fromARGB(255, 162, 196, 255) : Colors.green.shade400, size: Responsive.isTablet ? 35 : 25),
+                      leading: Icon(Icons.notifications, color: themeState.themeApp ? const Color.fromARGB(255, 162, 196, 255) : Colors.green.shade400, size: Responsive.isTablet ? 40 : 35),
                       title: Text(notiState.legacyNotifications[index].message!, style: Responsive.isTablet ? Theme.of(context).textTheme.titleLarge!.copyWith(color: themeState.themeApp ? Colors.white70 : Colors.black) : Theme.of(context).textTheme.bodyMedium!.copyWith(color: themeState.themeApp ? Colors.white70 : Colors.black)),
                       subtitle: LegacySubtitle(notification: notiState.legacyNotifications[index], isTablet: Responsive.isTablet),
                     );
