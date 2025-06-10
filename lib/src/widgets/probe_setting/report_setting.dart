@@ -112,13 +112,9 @@ class _ReportSettingState extends State<ReportSetting> {
                   onChanged: (value) {
                     context.read<ProbeSettingBloc>().add(SetValues(isDairyNoti: value));
                     if(value) {
-                      state.firstDayNoti = 'ALL';
-                      state.secondDayNoti = 'ALL';
-                      state.thirdDayNoti = 'ALL';
+                      context.read<ProbeSettingBloc>().add(SetValues(firstDayNoti: 'ALL', secondDayNoti: 'ALL', thirdDayNoti: 'ALL'));
                     } else {
-                      state.firstDayNoti = 'MON';
-                      state.secondDayNoti = 'TUE';
-                      state.thirdDayNoti = 'FRI';
+                      context.read<ProbeSettingBloc>().add(SetValues(firstDayNoti: 'MON', secondDayNoti: 'TUE', thirdDayNoti: 'FRI'));
                     }
                   },
                   inactiveColor: Colors.grey.shade400,

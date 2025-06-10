@@ -11,21 +11,21 @@ class ProbeSettingState extends Equatable {
   // แจ้งเตือนซ้ำ (ทุกกี่นาที)
   final int repeatNoti;
   // แจ้งเตือนทุกวัน หรือไม่?
-  bool isDairyNoti;
+  final bool isDairyNoti;
   // แจ้งเตือนที่วันที่ 1
-  String firstDayNoti; 
+  final String firstDayNoti; 
   // เวลาเริ่มต้นช่วงที่ 1
-  TimeOfDay firstTime;
+  final TimeOfDay firstTime;
   // แจ้งเตือนที่วันที่ 2
-  String secondDayNoti;
+  final String secondDayNoti;
   // เวลาเริ่มต้นช่วงที่ 2
-  TimeOfDay secondTime;
+  final TimeOfDay secondTime;
   // แจ้งเตือนที่วันที่ 3
-  String thirdDayNoti;
+  final String thirdDayNoti;
   // เวลาเริ่มต้นช่วงที่ 3
-  TimeOfDay thirdTime;
+  final TimeOfDay thirdTime;
 
-  ProbeSettingState({
+  const ProbeSettingState({
     this.temEntryNoti = true, 
     this.isNotification = true,
     this.delayfirstNoti = 0,
