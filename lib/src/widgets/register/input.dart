@@ -74,8 +74,10 @@ class _RegisterFormState extends State<RegisterForm> {
       isShowPass = !isShowPass;
       // เช็คถ้ายังกดอยู่กับช่องใส่รหัสผ่านจะไม่ทำอะไร
       if (passFocus.hasPrimaryFocus) return;
+      if (conFocus.hasPrimaryFocus) return;
       // ป้องกันการกดปุ่มก่อนเวลา
       passFocus.canRequestFocus = false;
+      conFocus.canRequestFocus = false;
     });
   }
 
