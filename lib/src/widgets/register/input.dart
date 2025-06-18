@@ -30,6 +30,7 @@ class _RegisterFormState extends State<RegisterForm> {
   // custom widget
   Systemwidgetcustom systemwidgetcustom = Systemwidgetcustom();
   final Api api = Api();
+  bool isShowPass = true;
 
   // ---------- ฟังก์ชั่นจำลองสมัครบัญชี ----------
   void register(BuildContext context) async {
@@ -67,6 +68,17 @@ class _RegisterFormState extends State<RegisterForm> {
     }
   }
 
+  // ------------- ฟังก์ชั่นกดแสดงรหัสผ่าน ------------
+  void togglePassword() {
+    setState(() {
+      isShowPass = !isShowPass;
+      // เช็คถ้ายังกดอยู่กับช่องใส่รหัสผ่านจะไม่ทำอะไร
+      if (passFocus.hasPrimaryFocus) return;
+      // ป้องกันการกดปุ่มก่อนเวลา
+      passFocus.canRequestFocus = false;
+    });
+  }
+
   // ---------- ฟังก์ชั่น unfocus ----------
   void _unfocus() {
     nameController.clear();
@@ -99,9 +111,39 @@ class _RegisterFormState extends State<RegisterForm> {
           const SizedBox(height: 20,),
           systemwidgetcustom.normalTextFormField(controller: nameController,hintText: 'ชื่อผู้ใช้',keyboardType: TextInputType.name, focus: nameFocus, hintColor: Colors.black),
           const SizedBox(height: 10,),
-          systemwidgetcustom.normalTextFormField(controller: passwordController,hintText: 'รหัสผ่าน',keyboardType: TextInputType.visiblePassword, focus: passFocus, hintColor: Colors.black),
+          TextFormField(
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              hintText: 'รหัสผ่าน',
+              hintStyle: TextStyle(color: Colors.black),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              suffixIcon: GestureDetector(
+                onTap: togglePassword,
+                child: isShowPass ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              ),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: sixColor)),
+            ),
+            obscureText: isShowPass,
+            controller: passwordController,
+            focusNode: passFocus,
+          ),
           const SizedBox(height: 10,),
-          systemwidgetcustom.normalTextFormField(hintText: 'ยืนยันรหัสผ่าน', controller: conFirmPasswordController, keyboardType: TextInputType.visiblePassword, focus: conFocus, hintColor: Colors.black),
+          TextFormField(
+            style: TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              hintText: 'ยืนยันรหัสผ่าน',
+              hintStyle: TextStyle(color: Colors.black),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              suffixIcon: GestureDetector(
+                onTap: togglePassword,
+                child: isShowPass ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+              ),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: sixColor)),
+            ),
+            obscureText: isShowPass,
+            controller: conFirmPasswordController,
+            focusNode: conFocus,
+          ),
           const SizedBox(height: 10,),
           systemwidgetcustom.normalTextFormField(controller: accountNameController,hintText: 'ชื่อที่แสดง',keyboardType: TextInputType.name, focus: accNameFocus, hintColor: Colors.black),
           const SizedBox(height: 30,),
